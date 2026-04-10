@@ -48,6 +48,8 @@ driver.get("https://mail.google.com")
 
 input("Login to Gmail and press Enter...")
 
+count = 0
+
 # ----------- Sending Emails -----------
 for row in data:
     name = row['Name']
@@ -82,11 +84,12 @@ rudraksharora2005.ima@gmail.com
         # Compose
         compose = wait.until(EC.element_to_be_clickable((By.XPATH, '//div[text()="Compose"]')))
         compose.click()
+        time.sleep(1)
 
         # To field (FIXED)
         to_field = wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@aria-label="To recipients"]')))
         to_field.send_keys(email)
-        time.sleep(2)
+        time.sleep(1)
 
         # Subject (your one was fine)
         subject_field = wait.until(EC.element_to_be_clickable((By.NAME, "subjectbox")))
@@ -98,27 +101,31 @@ rudraksharora2005.ima@gmail.com
         ))
         driver.execute_script("arguments[0].focus();", body)
         body.send_keys(message)
+        time.sleep(2)
 
         # Attachment 1 (hidden input, not the div you found)
         file_input = driver.find_element(By.XPATH, '//input[@type="file"]')
         driver.execute_script("arguments[0].style.display = 'block';", file_input)
         file_input.send_keys(file_path1)
 
-        time.sleep(3)  # wait for upload
+        time.sleep(5)  # wait for upload
 
         # Attachment 2 (hidden input, not the div you found)
         file_input = driver.find_element(By.XPATH, '//input[@type="file"]')
         driver.execute_script("arguments[0].style.display = 'block';", file_input)
         file_input.send_keys(file_path2)
 
-        time.sleep(3)  # wait for upload
+        time.sleep(5)  # wait for upload
 
         # Send (better selector)
         send_btn = wait.until(EC.element_to_be_clickable((By.XPATH, '//div[@role="button" and text()="Send"]')))
         send_btn.click()
 
         print(f"Sent to {name} ({email})")
-        time.sleep(5)
+        time.sleep(3)  # brief pause before next email
+        count += 1
 
     except Exception as e:
         print(f"Failed for {name} {email}: {e}")
+
+print(f"Total emails sent: {count}")
